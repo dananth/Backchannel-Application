@@ -1,0 +1,49 @@
+<tr>
+        <td class="micropost">
+                <span class="user"><%= link_to feed_item.user.name, feed_item.user %></span>
+                <span class="content"><%= feed_item.content %></span>
+                <span class="timestamp">Posted <%= time_ago_in_words(feed_item.created_at) %> ago. </span>
+        </td>
+        <% if current_user?(feed_item.user) %>
+                <td>
+                        <%= link_to "delete", feed_item, :method => :delete,
+                                             :confirm => "You sure?",
+                                             :title => feed_item.content %>
+                </td>
+        <% else %>
+                <td>
+                        <%= link_to "Like", :url => {:controller => 'microposts', :method => 'vote', 
+                                :mp_id => feed_item.id}%>
+                </td>
+
+          <% end %>
+</tr>
+
+<% unless feed_item.comments.empty? %>
+        <tr>
+                <td>
+                        <table>
+                                <th>Comments</th>
+                                <%= render feed_item.comments %>
+                        </table>
+                </td>
+        </tr>
+<% end %>
+
+<% if signed_in? %>
+        <tr>
+                <td>
+                        <%= form_for @comment, :url => {:controller => 'comments',
+                                :action => 'create', :mp_id => feed_item.id} do |f| %>
+
+                                <div class="field">
+                                        <%= f.text_field :content, :size => '85' %>
+                                        <%= f.hidden_field :user_id, :value => current_user.id %>
+                                        <%= f.submit "Comment" %>
+                                </div>
+                        <% end %>
+                </td>
+        </tr>
+
+<% end %>
+

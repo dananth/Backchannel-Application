@@ -1,0 +1,7 @@
+<%= form_for @comment, url => {:mp_id => micropost} do |f| %>
+        <div class="field">
+                <%= f.text_field :content %>
+                <%= f.hidden_field :user_id, :value => current_user %>
+                <%= f.submit "Submit" %>
+        </div>
+<% end %>
